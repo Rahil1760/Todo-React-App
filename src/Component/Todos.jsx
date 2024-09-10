@@ -1,23 +1,39 @@
 import { useState } from "react";
 import TodoItem from "./TodoItem";
 function Todos() {
-  const [inputVal, setInputVal] = useState("");
+  // const [inputVal, setInputVal] = useState("");
+  const [inputVal, setInputVal] = useState({ name: "", isDone: false });
   const [todos, setTodos] = useState([]);
 
   function handleOnchange(e) {
-    setInputVal(e.target.value);
+    setInputVal({ name: e.target.value, isDone: false });
   }
   function handleSubmit() {
-    if (todos.includes(inputVal)) {
-      alert("Todo exist in list");
-      return;
-    } else if (!inputVal) {
+    if (!inputVal.name) {
       alert("You must type todo");
     } else {
+      setInputVal({ name: "", isDone: false });
       setTodos([...todos, inputVal]);
-      setInputVal("");
     }
   }
+  function removeTodo(index) {
+    const filterItem = todos.filter((item, id) => {
+      return id != index;
+    });
+    setTodos(filterItem);
+  }
+  function editTodo(todos, index) {
+    setInputVal(todos[index]);
+    todos.splice(index, 1);
+    setTodos(todos);
+  }
+  function markAsDone(name) {
+    const styles = todos.map((todo) => {
+      return todo.name === name ? { ...todo, isDone: !todo.isDone } : todo;
+    });
+    setTodos(styles);
+  }
+
   return (
     <>
       <div className="md:w-1/2  w-full md:m-auto md:flex md:justify-center">
@@ -26,6 +42,8 @@ function Todos() {
             type="text"
             className="mt-5 bg-slate-700 w-full rounded-xl pl-3 text-white md:text-3xl h-10 shadow-2xl shadow-black text-sm"
             onChange={handleOnchange}
+            value={inputVal.name}
+            placeholder="Add todos here"
           />
         </div>
         <div className="flex justify-center">
@@ -37,9 +55,17 @@ function Todos() {
           </button>
         </div>
       </div>
-      <div className="text-center md:text-3xl text-sm">
+      <div className="text-center md:text-3xl text-sm mt-10">
         {todos.map((todo, index) => {
-          return <TodoItem key={index} data={todo} />;
+          return (
+            <TodoItem
+              key={index}
+              data={todo}
+              removeItem={() => removeTodo(index)}
+              mark={() => editTodo(todos, index)}
+              markAsDone={markAsDone}
+            />
+          );
         })}
       </div>
     </>
