@@ -40,7 +40,7 @@ function Todos() {
         <div>
           <input
             type="text"
-            className="mt-5 bg-slate-700 w-full rounded-xl pl-3 text-white md:text-3xl h-10 shadow-2xl shadow-black text-sm"
+            className="mt-5 bg-slate-200 w-full rounded-xl pl-3 text-black md:text-3xl h-10 shadow-2xl shadow-black text-sm border-black border"
             onChange={handleOnchange}
             value={inputVal.name}
             placeholder="Add todos here"
